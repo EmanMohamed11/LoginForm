@@ -1,13 +1,12 @@
 package org.example;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.reporters.jq.Main;
+
 
 import java.time.Duration;
 
@@ -49,13 +48,11 @@ public class Login {
 
         driver.findElement(By.cssSelector("input[name='inputPassword']")).sendKeys(Password);
         WebElement signInBtn=  driver.findElement(By.xpath("//button[text()='Sign In']"));
-      //  wait.until(ExpectedConditions.visibilityOf(signInBtn));
         System.out.println(signInBtn.isDisplayed());
         Thread.sleep(100);
         signInBtn.click();
         Thread.sleep(1000);
         WebElement ErrorMsg = driver.findElement(By.xpath("//p[text()='* Incorrect username or password']"));
-     //  wait.until(ExpectedConditions.visibilityOf(ErrorMsg));
         System.out.println(ErrorMsg.getText());
 
     }
