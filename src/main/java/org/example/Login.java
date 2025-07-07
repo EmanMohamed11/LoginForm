@@ -1,6 +1,6 @@
 package org.example;
-
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -21,11 +21,11 @@ public class Login {
     protected static String Password = "123456";
 
 
-    public static void Login() {
+    public static void LoginForm() {
         driver = new ChromeDriver();
         driver.get("https://rahulshettyacademy.com/locatorspractice/");
         driver.manage().window().maximize();
-        wait = new WebDriverWait(driver, Duration.ofSeconds(200));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(60));
     }
 
     public static void clickOnForgetPassword(){
@@ -44,26 +44,40 @@ public class Login {
       goToLogin.click();
     }
 
-    public static void loginWithInvalidData(String UserName , String Password) throws InterruptedException {driver.findElement(By.xpath("//*[@id='inputUsername']")).sendKeys(UserName);
-
+    public static void loginWithInvalidData(String UserName , String Password)  {
+        driver.findElement(By.xpath("//*[@id='inputUsername']")).sendKeys(UserName);
         driver.findElement(By.cssSelector("input[name='inputPassword']")).sendKeys(Password);
-        WebElement signInBtn=  driver.findElement(By.xpath("//button[text()='Sign In']"));
-        System.out.println(signInBtn.isDisplayed());
-        Thread.sleep(100);
-        signInBtn.click();
-        Thread.sleep(1000);
-        WebElement ErrorMsg = driver.findElement(By.xpath("//p[text()='* Incorrect username or password']"));
-        System.out.println(ErrorMsg.getText());
+
+        // Wait the sign-in form container to be  visible
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.cssSelector("div.form-container.sign-in-container")
+        ));
+
+        // Wait until the sign-in button is present
+        WebElement signInBtn = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//button[text()='Sign In']")));
+
+       // signInBtn.click();
+
+        // Use JavaScript to click
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].scrollIntoView(true);", signInBtn);
+        js.executeScript("arguments[0].click();", signInBtn);
+
+
+        WebElement errorMsg = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//p[text()='* Incorrect username or password']")));
+        System.out.println(errorMsg.getText());
+
 
     }
 
-    public static void main(String[] args) throws Exception{
-        Login();
+    public static void main(String[] args) {
+        LoginForm();
         clickOnForgetPassword();
         fillForgetPassForm(Name,Email,Phone);
         backToLogin();
         loginWithInvalidData(Name,Password);
-        //
+        
     }
 
 
